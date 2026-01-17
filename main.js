@@ -1,5 +1,6 @@
 // Helper function to fix Google Drive URLs
 function fixDriveUrl(url) {
+    if (!url) return '';
     if (url.includes('drive.google.com')) {
         let fileId = '';
         if (url.includes('id=')) {
@@ -12,7 +13,8 @@ function fixDriveUrl(url) {
     return url;
 }
 
-const gamesData = [
+// Master Data - Checks localStorage first for Admin Changes
+const defaultGames = [
     // Range 149
     { name: "Sekiro: Shadows Die Twice", price: 149, oldPrice: 3999, range: "149", platform: "PC / PS", image: "https://upload.wikimedia.org/wikipedia/en/6/6e/Sekiro_art.jpg", badge: "POPULAR" },
     { name: "Days Gone", price: 149, oldPrice: 2999, range: "149", platform: "PC / PS", image: "https://upload.wikimedia.org/wikipedia/en/a/a3/Days_Gone_cover_art.jpg" },
@@ -47,6 +49,22 @@ const gamesData = [
     { name: "Horizon Forbidden West", price: 199, oldPrice: 3999, range: "199", platform: "PC / PS4 / PS5", image: "https://upload.wikimedia.org/wikipedia/en/6/69/Horizon_Forbidden_West_cover_art.jpg" },
     { name: "Warhammer 40K: Space Marine 2", price: 199, oldPrice: 4999, range: "199", platform: "PC / PS5 / Xbox", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1544020/capsule_616x353.jpg", badge: "TRENDING" }
 ];
+
+const gamesData = JSON.parse(localStorage.getItem('nexplayy_games')) || defaultGames;
+const heroData = JSON.parse(localStorage.getItem('nexplayy_hero')) || { title: "LEVEL UP YOUR <br><span style='color: var(--primary-color)'>GAMING LIBRARY</span>", sub: "NexPlayy Store provides 100% genuine games for PC & Console at prices that will blow your mind." };
+
+// Sync initial data to localStorage for first-time admin use
+if (!localStorage.getItem('nexplayy_games')) {
+    localStorage.setItem('nexplayy_games', JSON.stringify(defaultGames));
+}
+
+// Update Hero Section on Load
+function updateHeroDOM() {
+    const heroH1 = document.querySelector('.hero h1');
+    const heroP = document.querySelector('.hero p');
+    if (heroH1) heroH1.innerHTML = heroData.title;
+    if (heroP) heroP.textContent = heroData.sub;
+}
 
 // Elements
 const gamesGrid = document.getElementById('gamesGrid');
@@ -147,6 +165,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 window.addEventListener('scroll', revealOnScroll);
 window.addEventListener('load', () => {
+    updateHeroDOM();
     renderGames();
     revealOnScroll();
 });

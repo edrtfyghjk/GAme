@@ -279,6 +279,7 @@ nav.scrolled {
     margin-bottom: 15px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -353,4 +354,110 @@ footer {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Admin Styles */
+.admin-login {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.admin-container {
+    padding: 120px 5% 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.admin-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(0, 245, 255, 0.1);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    color: var(--primary-color);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    border-radius: 6px;
+    color: #fff;
+    outline: none;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.admin-table th {
+    color: var(--primary-color);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.action-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.status-149 {
+    background: rgba(0, 245, 255, 0.1);
+    color: var(--primary-color);
+}
+
+.status-199 {
+    background: rgba(255, 165, 0, 0.1);
+    color: #ffa500;
+}
+
+.export-section {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 2000;
 }
