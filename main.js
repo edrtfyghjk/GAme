@@ -39,7 +39,7 @@ const defaultGames = [
     { name: "The Witcher 3: Wild Hunt", price: 149, oldPrice: 1999, range: "149", platform: "PC / PS / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/0/0b/Witcher_3_cover_art.jpg", badge: "GOTY" },
     { name: "God of War 4", price: 149, oldPrice: 3299, range: "149", platform: "PC / PS", image: "https://upload.wikimedia.org/wikipedia/en/a/a7/God_of_War_4_cover.jpg", badge: "BEST SELLER" },
     { name: "Detroit: Become Human", price: 149, oldPrice: 2499, range: "149", platform: "PC / PS", image: "https://upload.wikimedia.org/wikipedia/en/a/a7/Detroit_Become_Human_cover_art.jpg" },
-    { name: "Cricket 24", price: 149, oldPrice: 3999, range: "149", platform: "PC / PS / Xbox", image: "https://m.media-amazon.com/images/I/81B-8-09-WL._SL1500_.jpg", badge: "NEW" },
+    { name: "Cricket 24", price: 149, oldPrice: 3999, range: "149", platform: "PC / PS / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/4/41/Cricket_24_cover_art.jpg", badge: "NEW" },
     { name: "WWE 2K23", price: 149, oldPrice: 3499, range: "149", platform: "PC / PS / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/6/60/WWE_2K23_cover_art.jpg" },
     { name: "Resident Evil Village", price: 149, oldPrice: 2999, range: "149", platform: "PC / PS / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/2/2c/Resident_Evil_Village_cover_art.png" },
     { name: "Far Cry 5", price: 149, oldPrice: 2999, range: "149", platform: "PC / PS / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/0/0a/Far_Cry_5_cover_art.jpg" },
@@ -54,15 +54,15 @@ const defaultGames = [
     // Range 199
     { name: "Black Myth: Wukong", price: 199, oldPrice: 4999, range: "199", platform: "PC / PS5", image: "https://upload.wikimedia.org/wikipedia/en/2/2f/Black_Myth_Wukong_cover_art.jpg", badge: "PREMIUM" },
     { name: "The Last of Us Part II", price: 199, oldPrice: 3999, range: "199", platform: "PS4 / PS5", image: "https://upload.wikimedia.org/wikipedia/en/4/4f/TLOU_Part_II_cover_art.png" },
-    { name: "Spider-Man 2 Deluxe", price: 199, oldPrice: 5999, range: "199", platform: "PS5", image: "https://i.redd.it/d4g4k0x2w15b1.jpg", badge: "DELUXE" },
+    { name: "Spider-Man 2 Deluxe", price: 199, oldPrice: 5999, range: "199", platform: "PS5", image: "https://upload.wikimedia.org/wikipedia/en/a/ad/Marvel's_Spider-Man_2_cover_art.jpg", badge: "DELUXE" },
     { name: "The First Berserker: Khazan", price: 199, oldPrice: 4499, range: "199", platform: "PC / PS5 / Xbox", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2124490/capsule_616x353.jpg", badge: "UPCOMING" },
-    { name: "Ghost of Tsushima", price: 199, oldPrice: 4499, range: "199", platform: "PC / PS4 / PS5", image: "https://static.wikia.nocookie.net/ghost-of-tsushima/images/8/86/Ghost_of_Tsushima_Boxart.jpeg", badge: "TOP RATED" },
-    { name: "God of War Ragnarök", price: 199, oldPrice: 4999, range: "199", platform: "PC / PS4 / PS5", image: "https://m.media-amazon.com/images/I/81u72y-8jWL._SL1500_.jpg" },
+    { name: "Ghost of Tsushima", price: 199, oldPrice: 4499, range: "199", platform: "PC / PS4 / PS5", image: "https://upload.wikimedia.org/wikipedia/en/2/2e/Ghost_of_Tsushima_cover_art.jpg", badge: "TOP RATED" },
+    { name: "God of War Ragnarök", price: 199, oldPrice: 4999, range: "199", platform: "PC / PS4 / PS5", image: "https://upload.wikimedia.org/wikipedia/en/d/d7/God_of_War_Ragnarok_cover.jpg" },
     { name: "Alan Wake 2", price: 199, oldPrice: 3499, range: "199", platform: "PC / PS5 / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/e/ed/Alan_Wake_2_box_art.jpg" },
     { name: "EA Sports FC 25", price: 199, oldPrice: 4499, range: "199", platform: "PC / PS / Xbox", image: "https://images.immediate.co.uk/production/volatile/sites/3/2024/07/FC-25-cover-5b722d7.jpg", badge: "NEW" },
-    { name: "Grand Theft Auto V", price: 199, oldPrice: 2499, range: "199", platform: "PC / PS / Xbox", image: "https://www.gtaboom.com/wp-content/uploads/2013/04/GTA-V-Boxart.jpg", badge: "MUST HAVE" },
+    { name: "Grand Theft Auto V", price: 199, oldPrice: 2499, range: "199", platform: "PC / PS / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/7/7a/GTA_V_cover.jpg", badge: "MUST HAVE" },
     { name: "Red Dead Redemption 2", price: 199, oldPrice: 3999, range: "199", platform: "PC / PS / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/4/44/Red_Dead_Redemption_II.jpg", badge: "CLASSIC" },
-    { name: "Elden Ring + DLC", price: 199, oldPrice: 5499, range: "199", platform: "PC / PS / Xbox", image: "https://i.redd.it/z31d044p5x4b1.jpg", badge: "EXTENDED" },
+    { name: "Elden Ring + DLC", price: 199, oldPrice: 5499, range: "199", platform: "PC / PS / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/b/b9/Elden_Ring_cover_art.jpg", badge: "EXTENDED" },
     { name: "Resident Evil 4 Remake", price: 199, oldPrice: 3999, range: "199", platform: "PC / PS / Xbox", image: "https://upload.wikimedia.org/wikipedia/en/d/df/Resident_Evil_4_remake_cover_art.jpg" },
     { name: "Horizon Forbidden West", price: 199, oldPrice: 3999, range: "199", platform: "PC / PS4 / PS5", image: "https://upload.wikimedia.org/wikipedia/en/6/69/Horizon_Forbidden_West_cover_art.jpg" },
     { name: "Warhammer 40K: Space Marine 2", price: 199, oldPrice: 4999, range: "199", platform: "PC / PS5 / Xbox", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1544020/capsule_616x353.jpg", badge: "TRENDING" }
@@ -88,10 +88,34 @@ if (!localStorage.getItem('nexplayy_bundles')) {
 
 // Update Hero Section on Load
 function updateHeroDOM() {
-    const heroH1 = document.querySelector('.hero h1');
-    const heroP = document.querySelector('.hero p');
+    const heroH1 = document.getElementById('heroTitle');
+    const heroP = document.getElementById('heroSub');
     if (heroH1) heroH1.innerHTML = heroData.title;
     if (heroP) heroP.textContent = heroData.sub;
+}
+
+// Render Banners Section
+function renderBannersSection() {
+    const container = document.getElementById('banners-section');
+    if (!container) return;
+    const bannersData = JSON.parse(localStorage.getItem('nexplayy_banners')) || [];
+    container.innerHTML = '';
+    
+    if (bannersData.length === 0) return;
+    
+    bannersData.forEach(banner => {
+        const bannerEl = document.createElement('div');
+        bannerEl.className = 'banner-item';
+        bannerEl.innerHTML = `
+            <h3>${banner.title}</h3>
+            <p>${banner.desc}</p>
+            ${banner.link ? `<a href="${banner.link}" target="_blank" class="btn btn-primary btn-small">Learn More</a>` : ''}
+        `;
+        if (banner.link) {
+            bannerEl.style.cursor = 'pointer';
+        }
+        container.appendChild(bannerEl);
+    });
 }
 
 // Elements
@@ -341,6 +365,9 @@ window.addEventListener('storage', (e) => {
     if (e.key === 'nexplayy_featured') {
         renderFeaturedCarousel();
     }
+    if (e.key === 'nexplayy_banners') {
+        renderBannersSection();
+    }
     if (e.key === 'nexplayy_settings') {
         try { const s = JSON.parse(e.newValue); if (s) { if (!s.animations) document.body.classList.add('no-animations'); else document.body.classList.remove('no-animations'); renderFeaturedCarousel(); renderBundlesSection(); } } catch (err) {}
     }
@@ -376,6 +403,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 window.addEventListener('scroll', revealOnScroll);
 window.addEventListener('load', () => {
     updateHeroDOM();
+    renderBannersSection();
     renderRangeFilters();
     renderGames();
     renderBundlesSection();

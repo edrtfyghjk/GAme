@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NexPlayy | Premium Games at Best Prices</title>
+    <title>NexPlayy | Epic Games Store</title>
     <meta name="description"
         content="Buy original PC, PS, and Xbox games at discounted prices from NexPlayy Store. Trusted seller with instant Instagram delivery.">
     <link rel="stylesheet" href="style.css">
@@ -14,196 +14,172 @@
 <body>
 
     <!-- Navigation -->
-    <nav id="navbar">
-        <div class="logo">NexPlayy</div>
-        <ul class="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#games">Games</a></li>
-            <li><a href="#how-to-buy">Process</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-        <a href="https://www.instagram.com/nexplayy.store" target="_blank" class="btn btn-outline">DM
-            @nexplayy.store</a>
+    <nav id="navbar" class="nav-bar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i> NexPlayy
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#games">Games</a></li>
+                <li><a href="#featured">Featured</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="https://www.instagram.com/nexplayy.store" target="_blank" class="btn btn-outline">
+                    <i class="fab fa-instagram"></i> Follow
+                </a>
+                <a href="admin.html" class="admin-link" title="Admin Panel">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+        </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <h1 style="text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);">LEVEL UP YOUR <br><span
-                style="color: var(--primary-color)">GAMING LIBRARY</span></h1>
-        <p>NexPlayy Store provides 100% genuine games for PC & Console at prices that will blow your mind. Join the
-            community of 5000+ gamers today.</p>
-        <div class="hero-btns">
-            <a href="#games" class="btn btn-primary">Check Prices</a>
-            <a href="https://www.instagram.com/nexplayy.store" target="_blank" class="btn btn-outline"
-                style="margin-left: 15px;">Follow on Instagram</a>
+    <!-- Epic Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-background">
+            <div class="hero-glow"></div>
+            <div class="hero-grid"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-title">
+                <h1 id="heroTitle">LEVEL UP YOUR <br><span class="gradient-text">GAMING LIBRARY</span></h1>
+                <p id="heroSub" class="hero-subtitle">Premium games at legendary prices. Join 5000+ gamers in the ultimate gaming community.</p>
+            </div>
+            <div class="hero-buttons">
+                <a href="#games" class="btn btn-primary btn-large">
+                    <i class="fas fa-star"></i> Explore Games
+                </a>
+                <a href="#contact" class="btn btn-outline btn-large">
+                    <i class="fas fa-comment"></i> Get Support
+                </a>
+            </div>
         </div>
     </section>
 
-    <!-- Featured Carousel (Epic-style large banners) -->
-    <section id="featured" style="padding: 40px 5%;">
+    <!-- Dynamic Banners Section (Admin Controlled) -->
+    <section id="banners-section" class="banners-section">
+        <!-- Banners will be injected here by main.js -->
+    </section>
+
+    <!-- Featured Carousel (Epic-style) -->
+    <section id="featured" class="featured-section">
+        <div class="section-header">
+            <h2 class="section-title">🔥 Featured Drops</h2>
+            <p class="section-subtitle">Check out our hottest releases</p>
+        </div>
         <div id="featuredCarousel" class="featured-carousel">
-            <!-- injected by main.js -->
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about">
-        <div class="about-container">
-            <div class="about-content">
-                <h2 class="section-title" style="text-align: left; margin-bottom: 20px;">Why NexPlayy Store?</h2>
-                <p>We are a dedicated team of gamers providing digital game codes and accounts since 2021. Our primary
-                    goal is to make premium gaming titles affordable for everyone in the Indian gaming community.</p>
-                <p>With a 4.9/5 rating on Instagram, we pride ourselves on transparency, speed, and 24/7 client support
-                    via DMs.</p>
-                <div class="why-choose-me" style="margin-top: 30px;">
-                    <div class="feature-box glass"
-                        style="display: flex; gap: 20px; text-align: left; margin-bottom: 15px; padding: 15px;">
-                        <i class="fas fa-magic" style="color: var(--primary-color)"></i>
-                        <div>
-                            <h4>Value Deals</h4>
-                            <p style="font-size: 0.8rem; margin: 0;">Unbeatable prices for both new and classic titles.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="feature-box glass" style="display: flex; gap: 20px; text-align: left; padding: 15px;">
-                        <i class="fas fa-fire" style="color: var(--primary-color)"></i>
-                        <div>
-                            <h4>Fastest Delivery</h4>
-                            <p style="font-size: 0.8rem; margin: 0;">Receive your game within 15 minutes of payment.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="about-image glass"
-                style="flex: 1; height: 400px; background: url('assets/nexplayy-hero.png'); background-size: cover; border-radius: 20px; box-shadow: 0 0 40px rgba(255, 215, 0, 0.1);">
-            </div>
+            <!-- Injected by main.js -->
         </div>
     </section>
 
     <!-- Games Section -->
-    <section id="games">
-        <h2 class="section-title">Available Games</h2>
+    <section id="games" class="games-section">
+        <div class="section-header">
+            <h2 class="section-title">Game Library</h2>
+            <p class="section-subtitle">Discover your next favorite game</p>
+        </div>
 
         <!-- Search and Filter -->
-        <div class="search-container glass"
-            style="max-width: 800px; margin: 0 auto 40px; padding: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
-            <div style="flex: 1; position: relative; min-width: 250px;">
-                <i class="fas fa-search" style="position: absolute; left: 15px; top: 12px; color: var(--text-dim);"></i>
-                <input type="text" id="gameSearch" placeholder="Search by game name or platform..."
-                    style="width: 100%; padding: 10px 15px 10px 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; color: #fff; font-size: 1rem; outline: none;">
+        <div class="games-controls">
+            <div class="search-box glass">
+                <i class="fas fa-search"></i>
+                <input type="text" id="gameSearch" placeholder="Search games by name or platform...">
             </div>
-                <div class="filter-tabs" style="display: flex; gap: 10px;">
-                    <!-- filter buttons will be injected here by main.js -->
-                </div>
+            <div class="filter-tabs glass">
+                <!-- Filter buttons injected by main.js -->
             </div>
         </div>
 
         <div id="gamesGrid" class="games-grid">
-            <!-- Games will be injected here by JavaScript -->
-            <div class="loader" style="grid-column: 1/-1; text-align: center; padding: 50px;">
-                <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary-color)"></i>
-                <p style="margin-top: 15px;">Loading Game Library...</p>
+            <div class="loader">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading Epic Game Library...</p>
             </div>
-            <!-- Bundles injected by admin-controlled data -->
-            <div id="bundlesContainer" style="max-width: 1100px; margin: 0 auto 20px; padding: 0 20px;"></div>
         </div>
     </section>
 
-    <!-- Why Choose Me Section -->
-    <section style="background: var(--bg-darker)">
-        <h2 class="section-title">Trusted By Gamers</h2>
+    <!-- Bundles Section -->
+    <section id="bundles-section" class="bundles-section">
+        <div class="section-header">
+            <h2 class="section-title">🎁 Game Bundles</h2>
+            <p class="section-subtitle">Save more with our curated bundles</p>
+        </div>
+        <div id="bundlesContainer"></div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-choose-section">
+        <div class="section-header">
+            <h2 class="section-title">Why NexPlayy?</h2>
+        </div>
         <div class="features-grid">
-            <div class="feature-box glass">
-                <i class="fas fa-coins"></i>
-                <h3>Budget Friendly</h3>
-                <p>We source our keys during international sales to provide you with the lowest possible prices locally.
-                </p>
+            <div class="feature-card glass">
+                <div class="feature-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <h3>Unbeatable Prices</h3>
+                <p>Get AAA titles at prices that will blow your mind</p>
             </div>
-            <div class="feature-box glass">
-                <i class="fas fa-user-secret"></i>
+            <div class="feature-card glass">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Instant Delivery</h3>
+                <p>Receive your game within 15 minutes of payment</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
                 <h3>100% Genuine</h3>
-                <p>No hacks, no bans. All games are official versions that you can download directly from
-                    Steam/PlayStation/Xbox stores.</p>
+                <p>Official game codes, no hacks, no bans</p>
             </div>
-            <div class="feature-box glass">
-                <i class="fas fa-comments"></i>
-                <h3>Direct Support</h3>
-                <p>Talk to real people! We guide you through the activation process step-by-step.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- How to Purchase Section -->
-    <section id="how-to-buy">
-        <h2 class="section-title">How To Buy 🪄</h2>
-        <div class="steps-container">
-            <div class="step-card glass">
-                <div class="step-number">1</div>
-                <h3>Pick Game</h3>
-                <p>Select the title you want from our catalog.</p>
-            </div>
-            <div class="step-card glass">
-                <div class="step-number">2</div>
-                <h3>DM Us</h3>
-                <p>Click "DM To Buy" to chat with us on Instagram.</p>
-            </div>
-            <div class="step-card glass">
-                <div class="step-number">3</div>
-                <h3>Payment</h3>
-                <p>Pay via UPI, Bank Transfer or Cards as per instructions.</p>
-            </div>
-            <div class="step-card glass">
-                <div class="step-number">4</div>
-                <h3>Insta-Play</h3>
-                <p>Receive your credentials/key and start gaming!</p>
+            <div class="feature-card glass">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Real people ready to help you anytime</p>
             </div>
         </div>
-    </section>
-
-    <!-- Instagram Promotion Section -->
-    <section class="insta-promo">
-        <h2 style="color: var(--primary-color)">JOIN THE COMMUNITY</h2>
-        <p>Check our highlights for daily proofs and customer reviews.</p>
-        <span class="insta-handle">@nexplayy.store</span>
-        <a href="https://www.instagram.com/nexplayy.store" target="_blank" class="btn btn-primary">VISIT PROFILE</a>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact">
-        <h2 class="section-title">Get In Touch</h2>
-        <div class="glass"
-            style="max-width: 600px; margin: 0 auto; padding: 40px; text-align: center; border: 1px solid rgba(255, 215, 0, 0.3);">
-            <p style="margin-bottom: 30px;">For bulk orders or custom game requests, reach out directly!</p>
-            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
-                <a href="https://www.instagram.com/nexplayy.store" class="btn btn-outline">
-                    <i class="fab fa-instagram"></i> Instagram DM
+    <section id="contact" class="contact-section">
+        <div class="section-header">
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-subtitle">Join our gaming community</p>
+        </div>
+        <div class="contact-content glass">
+            <div class="contact-info">
+                <h3>Connect With Us</h3>
+                <p>Follow @nexplayy.store on Instagram for daily deals, new releases, and gaming updates.</p>
+                <a href="https://www.instagram.com/nexplayy.store" target="_blank" class="btn btn-primary btn-large">
+                    <i class="fab fa-instagram"></i> Follow @nexplayy.store
                 </a>
-                <a href="https://wa.me/919999999999" class="btn btn-primary" style="color: #000;">
-                    <i class="fab fa-whatsapp"></i> WhatsApp Store
-                </a>
+            </div>
+            <div class="contact-stats">
+                <div class="stat">
+                    <h4>5000+</h4>
+                    <p>Happy Gamers</p>
+                </div>
+                <div class="stat">
+                    <h4>4.9★</h4>
+                    <p>Rating</p>
+                </div>
+                <div class="stat">
+                    <h4>24/7</h4>
+                    <p>Support</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div>
-                <div class="logo">NexPlayy</div>
-                <p style="font-size: 0.9rem; color: var(--text-dim); margin-top: 10px;">The No. 1 Shop for Affordable
-                    Gaming in India.</p>
-            </div>
-            <div class="disclaimer">
-                <strong>Important Notice:</strong> NexPlayy Store only facilitates advertising through this website. All
-                transactions, payments, and product deliveries are managed exclusively through our official Instagram
-                account @nexplayy.store.
-            </div>
-        </div>
-        <div class="copyright">
-            &copy; 2026 NexPlayy Store. All rights reserved. | <a href="#"
-                style="color: var(--text-dim); text-decoration: none;">Privacy Policy</a>
-        </div>
+    <footer class="footer">
+        <p>&copy; 2026 NexPlayy Store. All rights reserved. | <a href="admin.html" style="color: var(--primary-color);">Admin Panel</a></p>
     </footer>
 
     <script src="main.js"></script>
