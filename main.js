@@ -8,9 +8,27 @@ function fixDriveUrl(url) {
         } else if (url.includes('/d/')) {
             fileId = url.split('/d/')[1].split('/')[0];
         }
-        return fileId ? `https://lh3.googleusercontent.com/d/${fileId}` : url;
+        // Use the Google Drive 'uc' endpoint which works for images and videos when the file is shared publicly
+        return fileId ? `https://drive.google.com/uc?export=view&id=${fileId}` : url;
     }
     return url;
+}
+
+function isVideoUrl(url) {
+    if (!url) return false;
+    const videoExt = ['.mp4', '.webm', '.ogg', '.mov'];
+    try {
+        const lower = url.split('?')[0].toLowerCase();
+        return videoExt.some(ext => lower.endsWith(ext));
+    } catch (e) { return false; }
+}
+
+function mediaHtmlFor(url, cls = 'game-img') {
+    const u = fixDriveUrl(url);
+    if (isVideoUrl(u)) {
+        return `<video class="${cls}" controls playsinline preload="metadata"><source src="${u}"></video>`;
+    }
+    return `<img src="${u}" class="${cls}" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80'">`;
 }
 
 // Master Data - Checks localStorage first for Admin Changes
@@ -49,13 +67,23 @@ const defaultGames = [
     { name: "Horizon Forbidden West", price: 199, oldPrice: 3999, range: "199", platform: "PC / PS4 / PS5", image: "https://upload.wikimedia.org/wikipedia/en/6/69/Horizon_Forbidden_West_cover_art.jpg" },
     { name: "Warhammer 40K: Space Marine 2", price: 199, oldPrice: 4999, range: "199", platform: "PC / PS5 / Xbox", image: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1544020/capsule_616x353.jpg", badge: "TRENDING" }
 ];
-
 const gamesData = JSON.parse(localStorage.getItem('nexplayy_games')) || defaultGames;
 const heroData = JSON.parse(localStorage.getItem('nexplayy_hero')) || { title: "LEVEL UP YOUR <br><span style='color: var(--primary-color)'>GAMING LIBRARY</span>", sub: "NexPlayy Store provides 100% genuine games for PC & Console at prices that will blow your mind." };
+
+// Ranges and Bundles (admin controllable)
+const defaultRanges = ['149', '199'];
+const rangesData = JSON.parse(localStorage.getItem('nexplayy_ranges')) || defaultRanges;
+const bundlesData = JSON.parse(localStorage.getItem('nexplayy_bundles')) || [];
 
 // Sync initial data to localStorage for first-time admin use
 if (!localStorage.getItem('nexplayy_games')) {
     localStorage.setItem('nexplayy_games', JSON.stringify(defaultGames));
+}
+if (!localStorage.getItem('nexplayy_ranges')) {
+    localStorage.setItem('nexplayy_ranges', JSON.stringify(defaultRanges));
+}
+if (!localStorage.getItem('nexplayy_bundles')) {
+    localStorage.setItem('nexplayy_bundles', JSON.stringify(bundlesData));
 }
 
 // Update Hero Section on Load
@@ -69,7 +97,8 @@ function updateHeroDOM() {
 // Elements
 const gamesGrid = document.getElementById('gamesGrid');
 const gameSearch = document.getElementById('gameSearch');
-const filterBtns = document.querySelectorAll('.filter-btn');
+const filterTabsContainer = document.querySelector('.filter-tabs');
+const bundlesContainer = document.getElementById('bundlesContainer');
 const navbar = document.getElementById('navbar');
 
 // Render Games
@@ -92,14 +121,18 @@ function renderGames(filter = 'all', search = '') {
         const card = document.createElement('div');
         card.className = 'game-card glass';
 
-        const imageUrl = fixDriveUrl(game.image);
+        // click to open detail modal
+        card.addEventListener('click', () => showGameDetail(game));
+
         const badgeHtml = game.badge ? `<div class="offer-badge">${game.badge}</div>` : '';
         const oldPriceHtml = game.oldPrice ? `<span class="game-old-price">₹${game.oldPrice}</span>` : '';
+        const descHtml = game.description ? `<p class="game-desc">${game.description}</p>` : `<p class="game-desc">Full access digital license. Verified original game. Order via DM.</p>`;
+        const mediaHtml = mediaHtmlFor(game.image, 'game-img');
 
         card.innerHTML = `
             <div class="game-img-container">
                 ${badgeHtml}
-                <img src="${imageUrl}" class="game-img" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80'">
+                ${mediaHtml}
             </div>
             <div class="game-info">
                 <span class="game-platform">${game.platform}</span>
@@ -108,13 +141,68 @@ function renderGames(filter = 'all', search = '') {
                     <span class="game-price">₹${game.price}</span>
                     ${oldPriceHtml}
                 </div>
-                <p class="game-desc">Full access digital license. Verified original game. Order via DM.</p>
+                ${descHtml}
                 <a href="https://ig.me/m/nexplayy.store?text=I%20want%20to%20buy%20${encodeURIComponent(game.name)}" class="btn btn-primary" style="width: 100%;">DM To Buy</a>
             </div>
         `;
 
         gamesGrid.appendChild(card);
     });
+}
+
+// Featured carousel (uses first 4 games or ones with badge)
+function renderFeaturedCarousel() {
+    const container = document.getElementById('featuredCarousel');
+    if (!container) return;
+    container.innerHTML = '';
+    // read featured from localStorage if present
+    const featuredRaw = JSON.parse(localStorage.getItem('nexplayy_featured')) || [];
+    const featuredNames = featuredRaw.map(f => f.name);
+    const use = featuredNames.length ? featuredNames.map(n => gamesData.find(g=>g.name===n)).filter(Boolean) : gamesData.filter(g => ['HOT','OFFER','POPULAR','BEST SELLER','DELUXE','PREMIUM'].includes((g.badge||'').toUpperCase())).slice(0,4);
+
+    use.forEach((g, idx) => {
+        const el = document.createElement('div');
+        el.className = 'feature-slide glass';
+        el.style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.2)), url('${fixDriveUrl(g.image)}')`;
+        const note = (featuredRaw[idx] && featuredRaw[idx].note) ? featuredRaw[idx].note : '';
+        el.innerHTML = `<div class="feature-info"><h2>${g.name}</h2><p>${note || g.description || ''}</p><div class="feature-actions"><span class="price">₹${g.price}</span><a href="https://ig.me/m/nexplayy.store?text=I%20want%20to%20buy%20${encodeURIComponent(g.name)}" class="btn btn-primary">DM To Buy</a></div></div>`;
+        el.addEventListener('click', () => showGameDetail(g));
+        container.appendChild(el);
+    });
+
+    // autoplay support
+    const settings = JSON.parse(localStorage.getItem('nexplayy_settings')) || { autoplay: true, autoplayInterval: 5000, animations: true, showBundles: true };
+    clearInterval(window.__featuredAutoplay);
+    if (settings.autoplay && use.length > 1) {
+        let idx = 0;
+        window.__featuredAutoplay = setInterval(() => {
+            idx = (idx + 1) % use.length;
+            const children = Array.from(container.children);
+            children.forEach((c,i)=> c.style.display = i===idx ? 'block' : 'none');
+        }, settings.autoplayInterval || 5000);
+        // initialize visibility
+        Array.from(container.children).forEach((c,i)=> c.style.display = i===0 ? 'block' : 'none');
+    }
+}
+
+// Game Detail Modal
+function showGameDetail(game) {
+    const overlay = document.createElement('div');
+    overlay.className = 'detail-overlay';
+    overlay.innerHTML = `
+        <div class="detail-card glass">
+            <div class="detail-left">${mediaHtmlFor(game.image,'detail-img')}</div>
+            <div class="detail-right">
+                <h2>${game.name}</h2>
+                <div class="detail-meta"><span class="game-platform">${game.platform}</span><span class="game-price">₹${game.price}</span>${game.oldPrice?`<span class="game-old-price">₹${game.oldPrice}</span>`:''}</div>
+                <p class="game-desc" style="-webkit-line-clamp:6;">${game.description||'Full access digital license. Verified original game. Order via DM.'}</p>
+                <div style="display:flex;gap:12px;margin-top:18px;"><a class="btn btn-primary" href="https://ig.me/m/nexplayy.store?text=I%20want%20to%20buy%20${encodeURIComponent(game.name)}" target="_blank">DM To Buy</a><button class="btn btn-outline" id="closeDetailBtn">Close</button></div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    overlay.querySelector('#closeDetailBtn').addEventListener('click', () => document.body.removeChild(overlay));
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) document.body.removeChild(overlay); });
 }
 
 // Events
@@ -134,6 +222,136 @@ filterBtns.forEach(btn => {
 window.addEventListener('scroll', () => {
     if (window.scrollY > 50) navbar.classList.add('scrolled');
     else navbar.classList.remove('scrolled');
+});
+
+// Render dynamic range filter buttons (based on admin-controlled ranges)
+function renderRangeFilters() {
+    if (!filterTabsContainer) return;
+    filterTabsContainer.innerHTML = '';
+    const allBtn = document.createElement('button');
+    allBtn.className = 'filter-btn active';
+    allBtn.dataset.filter = 'all';
+    allBtn.innerText = 'All';
+    filterTabsContainer.appendChild(allBtn);
+
+    rangesData.forEach(r => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-btn';
+        btn.dataset.filter = r;
+        btn.innerText = `₹${r} Range`;
+        filterTabsContainer.appendChild(btn);
+    });
+
+    // attach events
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderGames(btn.dataset.filter, gameSearch.value);
+        });
+    });
+}
+
+// Bundles UI on homepage
+function renderBundlesSection() {
+    if (!bundlesContainer) return;
+    bundlesContainer.innerHTML = '';
+    if (!bundlesData || bundlesData.length === 0) return;
+    const title = document.createElement('h3');
+    title.className = 'section-title';
+    title.innerText = 'Bundles';
+    bundlesContainer.appendChild(title);
+
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '12px';
+    row.style.flexWrap = 'wrap';
+
+    bundlesData.forEach((b, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-outline';
+        btn.innerText = b.name;
+        btn.title = b.description || '';
+        btn.addEventListener('click', () => showBundleDetail(idx));
+        row.appendChild(btn);
+    });
+
+    bundlesContainer.appendChild(row);
+}
+
+function showBundleDetail(index) {
+    const bundle = bundlesData[index];
+    if (!bundle) return;
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.left = 0;
+    overlay.style.top = 0;
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.background = 'rgba(0,0,0,0.85)';
+    overlay.style.zIndex = 5000;
+    overlay.style.overflow = 'auto';
+    overlay.innerHTML = `
+        <div style="max-width:1100px;margin:40px auto;padding:20px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;color:#fff;margin-bottom:12px;">
+                <h2>${bundle.name}</h2>
+                <div><button class="btn btn-outline" id="closeBundleBtn">Close</button></div>
+            </div>
+            <p style="color:var(--text-dim);">${bundle.description || ''}</p>
+            <div id="bundleGamesList" class="games-grid" style="margin-top:16px;"></div>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    document.getElementById('closeBundleBtn').addEventListener('click', () => document.body.removeChild(overlay));
+
+    const list = overlay.querySelector('#bundleGamesList');
+    const bundleGames = gamesData.filter(g => bundle.gameIds && bundle.gameIds.includes(g.name));
+    if (bundleGames.length === 0) {
+        list.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-dim);">No games in this bundle.</div>';
+        return;
+    }
+    bundleGames.forEach(game => {
+        const card = document.createElement('div');
+        card.className = 'game-card glass';
+        const oldPriceHtml = game.oldPrice ? `<span class="game-old-price">₹${game.oldPrice}</span>` : '';
+        const descHtml = game.description ? `<p class="game-desc">${game.description}</p>` : '';
+        const mediaHtml = mediaHtmlFor(game.image, 'game-img');
+        card.innerHTML = `
+            <div class="game-img-container">
+                ${mediaHtml}
+            </div>
+            <div class="game-info">
+                <span class="game-platform">${game.platform}</span>
+                <h3 class="game-name" title="${game.name}">${game.name}</h3>
+                <div class="game-price-tag"><span class="game-price">₹${game.price}</span>${oldPriceHtml}</div>
+                ${descHtml}
+            </div>
+        `;
+        list.appendChild(card);
+    });
+}
+
+// Listen for admin changes (localStorage sync across tabs)
+window.addEventListener('storage', (e) => {
+    if (e.key === 'nexplayy_games') {
+        try { const d = JSON.parse(e.newValue); if (Array.isArray(d)) { gamesData.length = 0; d.forEach(g => gamesData.push(g)); } } catch (err) {}
+        renderGames(document.querySelector('.filter-btn.active')?.dataset.filter || 'all', gameSearch.value);
+    }
+    if (e.key === 'nexplayy_hero') {
+        try { const h = JSON.parse(e.newValue); if (h) { heroData.title = h.title; heroData.sub = h.sub; updateHeroDOM(); } } catch (err) {}
+    }
+    if (e.key === 'nexplayy_ranges') {
+        try { const r = JSON.parse(e.newValue); if (Array.isArray(r)) { rangesData.length = 0; r.forEach(x => rangesData.push(x)); renderRangeFilters(); } } catch (err) {}
+    }
+    if (e.key === 'nexplayy_bundles') {
+        try { const b = JSON.parse(e.newValue); if (Array.isArray(b)) { bundlesData.length = 0; b.forEach(x => bundlesData.push(x)); renderBundlesSection(); } } catch (err) {}
+    }
+    if (e.key === 'nexplayy_featured') {
+        renderFeaturedCarousel();
+    }
+    if (e.key === 'nexplayy_settings') {
+        try { const s = JSON.parse(e.newValue); if (s) { if (!s.animations) document.body.classList.add('no-animations'); else document.body.classList.remove('no-animations'); renderFeaturedCarousel(); renderBundlesSection(); } } catch (err) {}
+    }
 });
 
 // Scroll Reveal
@@ -166,6 +384,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 window.addEventListener('scroll', revealOnScroll);
 window.addEventListener('load', () => {
     updateHeroDOM();
+    renderRangeFilters();
     renderGames();
+    renderBundlesSection();
+    renderFeaturedCarousel();
     revealOnScroll();
 });

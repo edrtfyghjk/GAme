@@ -40,6 +40,13 @@
         </div>
     </section>
 
+    <!-- Featured Carousel (Epic-style large banners) -->
+    <section id="featured" style="padding: 40px 5%;">
+        <div id="featuredCarousel" class="featured-carousel">
+            <!-- injected by main.js -->
+        </div>
+    </section>
+
     <!-- About Section -->
     <section id="about">
         <div class="about-container">
@@ -86,10 +93,9 @@
                 <input type="text" id="gameSearch" placeholder="Search by game name or platform..."
                     style="width: 100%; padding: 10px 15px 10px 45px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 8px; color: #fff; font-size: 1rem; outline: none;">
             </div>
-            <div class="filter-tabs" style="display: flex; gap: 10px;">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="149">₹149 Range</button>
-                <button class="filter-btn" data-filter="199">₹199 Range</button>
+                <div class="filter-tabs" style="display: flex; gap: 10px;">
+                    <!-- filter buttons will be injected here by main.js -->
+                </div>
             </div>
         </div>
 
@@ -99,6 +105,8 @@
                 <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--primary-color)"></i>
                 <p style="margin-top: 15px;">Loading Game Library...</p>
             </div>
+            <!-- Bundles injected by admin-controlled data -->
+            <div id="bundlesContainer" style="max-width: 1100px; margin: 0 auto 20px; padding: 0 20px;"></div>
         </div>
     </section>
 

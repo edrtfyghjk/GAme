@@ -52,6 +52,73 @@
             </div>
         </div>
 
+        <!-- Range Controls -->
+        <div class="admin-card">
+            <h3>Range Controls</h3>
+            <div style="display:flex;gap:12px;align-items:center;margin-top:12px;">
+                <input type="text" id="newRangeValue" placeholder="e.g. 249" style="width:160px;padding:8px;">
+                <button class="btn btn-primary btn-small" onclick="addRange()">Add Range</button>
+            </div>
+            <div id="rangesList" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;"></div>
+        </div>
+
+        <!-- Bundles Management -->
+        <div class="admin-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h3>Bundles</h3>
+                <button class="btn btn-primary btn-small" onclick="showAddBundleModal()">+ Add Bundle</button>
+            </div>
+            <div id="bundlesAdminList" style="margin-top:12px;">
+                <!-- bundles will be listed here -->
+            </div>
+        </div>
+
+        <!-- Featured Management -->
+        <div class="admin-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <h3>Featured Carousel</h3>
+                <button class="btn btn-primary btn-small" onclick="showAddFeaturedModal()">+ Add Featured</button>
+            </div>
+            <div id="featuredAdminList" style="margin-top:12px;">
+                <!-- featured items -->
+            </div>
+        </div>
+
+        <!-- Site Settings -->
+        <div class="admin-card">
+            <h3>Site Settings</h3>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+                <div class="form-group">
+                    <label>Carousel Autoplay</label>
+                    <select id="sAutoplay">
+                        <option value="true">Enabled</option>
+                        <option value="false">Disabled</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Autoplay Interval (ms)</label>
+                    <input type="number" id="sAutoplayInterval" value="5000">
+                </div>
+                <div class="form-group">
+                    <label>Enable Animations</label>
+                    <select id="sAnimations">
+                        <option value="true">Enabled</option>
+                        <option value="false">Disabled</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Show Bundles</label>
+                    <select id="sBundles">
+                        <option value="true">Shown</option>
+                        <option value="false">Hidden</option>
+                    </select>
+                </div>
+            </div>
+            <div style="margin-top:12px;">
+                <button class="btn btn-primary" onclick="saveSiteSettings()">Save Settings</button>
+            </div>
+        </div>
+
         <!-- Games Table -->
         <div class="admin-card">
             <table class="admin-table">
@@ -109,6 +176,10 @@
                 <input type="text" id="mImage">
             </div>
             <div class="form-group">
+                <label>Description (short)</label>
+                <textarea id="mDescription" rows="3" placeholder="Short description shown on homepage"></textarea>
+            </div>
+            <div class="form-group">
                 <label>Platform (e.g. PC / PS5)</label>
                 <input type="text" id="mPlatform">
             </div>
@@ -129,6 +200,8 @@
         // Use standard initial data if local is empty
         let localGames = JSON.parse(localStorage.getItem('nexplayy_games')) || [];
         let heroData = JSON.parse(localStorage.getItem('nexplayy_hero')) || { title: "LEVEL UP YOUR GAMING LIBRARY", sub: "NexPlayy Store provides 100% genuine games for PC & Console." };
+        let localRanges = JSON.parse(localStorage.getItem('nexplayy_ranges')) || ['149','199'];
+        let localBundles = JSON.parse(localStorage.getItem('nexplayy_bundles')) || [];
         let currentEditIndex = -1;
 
         function checkLogin() {
@@ -145,6 +218,8 @@
             document.getElementById('heroTitle').value = heroData.title;
             document.getElementById('heroSub').value = heroData.sub;
             renderAdminGames();
+            renderRangesControls();
+            renderBundlesAdmin();
         }
 
         function updateHeroData() {
@@ -182,6 +257,40 @@
             });
         }
 
+            function renderRangesControls() {
+                const el = document.getElementById('rangesList');
+                el.innerHTML = '';
+                localRanges.forEach((r, idx) => {
+                    const span = document.createElement('span');
+                    span.className = 'status-badge status-' + r;
+                    span.style.display = 'inline-flex';
+                    span.style.alignItems = 'center';
+                    span.style.gap = '8px';
+                    span.style.padding = '6px 10px';
+                    span.style.borderRadius = '8px';
+                    span.style.background = 'rgba(255,255,255,0.03)';
+                    span.innerHTML = `₹${r} <button class="btn btn-outline btn-small" style="margin-left:8px;" onclick="deleteRange(${idx})">x</button>`;
+                    el.appendChild(span);
+                });
+            }
+
+            function addRange() {
+                const v = document.getElementById('newRangeValue').value.trim();
+                if (!v) return alert('Enter a range value');
+                if (localRanges.includes(v)) return alert('Range already exists');
+                localRanges.push(v);
+                localStorage.setItem('nexplayy_ranges', JSON.stringify(localRanges));
+                renderRangesControls();
+                alert('Range added. Open the homepage to see updated filter.');
+            }
+
+            function deleteRange(idx) {
+                if (!confirm('Delete this range?')) return;
+                localRanges.splice(idx,1);
+                localStorage.setItem('nexplayy_ranges', JSON.stringify(localRanges));
+                renderRangesControls();
+            }
+
         function showAddModal() {
             currentEditIndex = -1;
             document.getElementById('modalTitle').innerText = 'Add New Game';
@@ -192,7 +301,135 @@
             document.getElementById('mBadge').value = '';
             document.getElementById('mImage').value = '';
             document.getElementById('mPlatform').value = 'PC / PS / Xbox';
+            document.getElementById('mDescription').value = '';
             document.getElementById('gameModal').style.display = 'flex';
+        }
+
+        // Featured admin functions
+        let localFeatured = JSON.parse(localStorage.getItem('nexplayy_featured')) || [];
+
+        function renderFeaturedAdmin() {
+            const el = document.getElementById('featuredAdminList');
+            el.innerHTML = '';
+            if (!localFeatured || localFeatured.length === 0) {
+                el.innerHTML = '<div style="color:var(--text-dim);">No featured items yet.</div>';
+                return;
+            }
+            localFeatured.forEach((f, idx) => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+                div.style.alignItems = 'center';
+                div.style.padding = '8px 0';
+                div.innerHTML = `<div><strong>${f.name}</strong><div style="color:var(--text-dim);">${f.note||''}</div></div>
+                    <div style="display:flex;gap:8px;align-items:center;"><button class=\"btn btn-outline btn-small\" onclick=\"moveFeaturedUp(${idx})\">↑</button><button class=\"btn btn-outline btn-small\" onclick=\"moveFeaturedDown(${idx})\">↓</button><button class=\"btn btn-outline btn-small\" onclick=\"editFeatured(${idx})\">Edit</button><button class=\"btn btn-outline btn-small\" style=\"color:#ff4444;border-color:#ff4444;\" onclick=\"deleteFeatured(${idx})\">Delete</button></div>`;
+                el.appendChild(div);
+            });
+        }
+
+        function showAddFeaturedModal() {
+            const overlay = document.createElement('div');
+            overlay.id = 'featuredModal';
+            overlay.style.position = 'fixed';overlay.style.left=0;overlay.style.top=0;overlay.style.width='100%';overlay.style.height='100%';overlay.style.background='rgba(0,0,0,0.9)';overlay.style.zIndex=3000;overlay.innerHTML = `
+                <div class="glass" style="padding:20px;max-width:700px;margin:40px auto;">
+                    <h3>Add Featured</h3>
+                    <div class="form-group"><label>Pick Game</label><select id="fGameSelect">${localGames.map(g=>`<option value="${g.name}">${g.name}</option>`).join('')}</select></div>
+                    <div class="form-group"><label>Optional Note</label><input id="fNote"></div>
+                    <div class="action-btns"><button class="btn btn-primary" id="saveFeaturedBtn">Save</button><button class="btn btn-outline" id="cancelFeaturedBtn">Cancel</button></div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            document.getElementById('cancelFeaturedBtn').addEventListener('click', ()=>document.body.removeChild(overlay));
+            document.getElementById('saveFeaturedBtn').addEventListener('click', ()=>{
+                const name = document.getElementById('fGameSelect').value;
+                const note = document.getElementById('fNote').value;
+                if (!name) return alert('Select a game');
+                localFeatured.push({ name, note });
+                localStorage.setItem('nexplayy_featured', JSON.stringify(localFeatured));
+                renderFeaturedAdmin();
+                document.body.removeChild(overlay);
+                alert('Featured saved. Open homepage to view.');
+            });
+        }
+
+        function editFeatured(idx) {
+            const f = localFeatured[idx];
+            if (!f) return;
+            const overlay = document.createElement('div');
+            overlay.id = 'featuredModal';
+            overlay.style.position = 'fixed';overlay.style.left=0;overlay.style.top=0;overlay.style.width='100%';overlay.style.height='100%';overlay.style.background='rgba(0,0,0,0.9)';overlay.style.zIndex=3000;overlay.innerHTML = `
+                <div class="glass" style="padding:20px;max-width:700px;margin:40px auto;">
+                    <h3>Edit Featured</h3>
+                    <div class="form-group"><label>Pick Game</label><select id="fGameSelect">${localGames.map(g=>`<option value="${g.name}" ${g.name===f.name? 'selected':''}>${g.name}</option>`).join('')}</select></div>
+                    <div class="form-group"><label>Optional Note</label><input id="fNote" value="${f.note||''}"></div>
+                    <div class="action-btns"><button class="btn btn-primary" id="saveFeaturedBtn">Save</button><button class="btn btn-outline" id="cancelFeaturedBtn">Cancel</button></div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            document.getElementById('cancelFeaturedBtn').addEventListener('click', ()=>document.body.removeChild(overlay));
+            document.getElementById('saveFeaturedBtn').addEventListener('click', ()=>{
+                const name = document.getElementById('fGameSelect').value;
+                const note = document.getElementById('fNote').value;
+                localFeatured[idx] = { name, note };
+                localStorage.setItem('nexplayy_featured', JSON.stringify(localFeatured));
+                renderFeaturedAdmin();
+                document.body.removeChild(overlay);
+            });
+        }
+
+        function deleteFeatured(idx) {
+            if (!confirm('Delete this featured item?')) return;
+            localFeatured.splice(idx,1);
+            localStorage.setItem('nexplayy_featured', JSON.stringify(localFeatured));
+            renderFeaturedAdmin();
+        }
+
+        function moveFeaturedUp(idx) { if (idx<=0) return; const t = localFeatured[idx-1]; localFeatured[idx-1]=localFeatured[idx]; localFeatured[idx]=t; localStorage.setItem('nexplayy_featured', JSON.stringify(localFeatured)); renderFeaturedAdmin(); }
+        function moveFeaturedDown(idx) { if (idx>=localFeatured.length-1) return; const t = localFeatured[idx+1]; localFeatured[idx+1]=localFeatured[idx]; localFeatured[idx]=t; localStorage.setItem('nexplayy_featured', JSON.stringify(localFeatured)); renderFeaturedAdmin(); }
+
+        // Site settings
+        let localSettings = JSON.parse(localStorage.getItem('nexplayy_settings')) || { autoplay: true, autoplayInterval: 5000, animations: true, showBundles: true };
+
+        function loadSiteSettingsToForm() {
+            document.getElementById('sAutoplay').value = localSettings.autoplay ? 'true' : 'false';
+            document.getElementById('sAutoplayInterval').value = localSettings.autoplayInterval || 5000;
+            document.getElementById('sAnimations').value = localSettings.animations ? 'true' : 'false';
+            document.getElementById('sBundles').value = localSettings.showBundles ? 'true' : 'false';
+        }
+
+        function saveSiteSettings() {
+            localSettings.autoplay = document.getElementById('sAutoplay').value === 'true';
+            localSettings.autoplayInterval = parseInt(document.getElementById('sAutoplayInterval').value) || 5000;
+            localSettings.animations = document.getElementById('sAnimations').value === 'true';
+            localSettings.showBundles = document.getElementById('sBundles').value === 'true';
+            localStorage.setItem('nexplayy_settings', JSON.stringify(localSettings));
+            applyLocalSettings();
+            alert('Settings saved. Open homepage to see changes.');
+        }
+
+        function applyLocalSettings() {
+            // expose to other tabs via storage event
+            localStorage.setItem('nexplayy_settings', JSON.stringify(localSettings));
+        }
+
+        // initialize on dashboard load
+        function renderBundlesAdmin() { /* existing function overwritten earlier; keep call */
+            const el = document.getElementById('bundlesAdminList');
+            el.innerHTML = '';
+            if (!localBundles || localBundles.length === 0) {
+                el.innerHTML = '<div style="color:var(--text-dim);">No bundles yet. Create one to group games.</div>';
+                return;
+            }
+            localBundles.forEach((b, idx) => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+                div.style.alignItems = 'center';
+                div.style.padding = '8px 0';
+                div.innerHTML = `<div><strong>${b.name}</strong><div style="color:var(--text-dim);">${b.description || ''}</div></div>
+                    <div style="display:flex;gap:8px;"><button class=\"btn btn-outline btn-small\" onclick=\"editBundle(${idx})\">Edit</button><button class=\"btn btn-outline btn-small\" style=\"color:#ff4444;border-color:#ff4444;\" onclick=\"deleteBundle(${idx})\">Delete</button></div>`;
+                el.appendChild(div);
+            });
         }
 
         function editGame(index) {
@@ -206,6 +443,7 @@
             document.getElementById('mBadge').value = g.badge || '';
             document.getElementById('mImage').value = g.image;
             document.getElementById('mPlatform').value = g.platform;
+            document.getElementById('mDescription').value = g.description || '';
             document.getElementById('gameModal').style.display = 'flex';
         }
 
@@ -217,6 +455,7 @@
                 range: document.getElementById('mRange').value,
                 badge: document.getElementById('mBadge').value,
                 image: document.getElementById('mImage').value,
+                description: document.getElementById('mDescription').value,
                 platform: document.getElementById('mPlatform').value
             };
 
@@ -239,6 +478,101 @@
             }
         }
 
+        // Bundles admin functions
+        function renderBundlesAdmin() {
+            const el = document.getElementById('bundlesAdminList');
+            el.innerHTML = '';
+            if (!localBundles || localBundles.length === 0) {
+                el.innerHTML = '<div style="color:var(--text-dim);">No bundles yet. Create one to group games.</div>';
+                return;
+            }
+            localBundles.forEach((b, idx) => {
+                const div = document.createElement('div');
+                div.style.display = 'flex';
+                div.style.justifyContent = 'space-between';
+                div.style.alignItems = 'center';
+                div.style.padding = '8px 0';
+                div.innerHTML = `<div><strong>${b.name}</strong><div style="color:var(--text-dim);">${b.description || ''}</div></div>
+                    <div style="display:flex;gap:8px;"><button class=\"btn btn-outline btn-small\" onclick=\"editBundle(${idx})\">Edit</button><button class=\"btn btn-outline btn-small\" style=\"color:#ff4444;border-color:#ff4444;\" onclick=\"deleteBundle(${idx})\">Delete</button></div>`;
+                el.appendChild(div);
+            });
+        }
+
+        function showAddBundleModal() {
+            // build modal dynamically
+            const overlay = document.createElement('div');
+            overlay.id = 'bundleModalOverlay';
+            overlay.style.position = 'fixed';
+            overlay.style.left = 0;
+            overlay.style.top = 0;
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.background = 'rgba(0,0,0,0.9)';
+            overlay.style.zIndex = 3000;
+            overlay.innerHTML = `
+                <div class="glass" style="padding:20px;max-width:800px;margin:40px auto;">
+                    <h3 id="bundleModalTitle">Add Bundle</h3>
+                    <div class="form-group"><label>Bundle Name</label><input id="bName"></div>
+                    <div class="form-group"><label>Description</label><textarea id="bDesc" rows="2"></textarea></div>
+                    <div class="form-group"><label>Select Games to include</label><div id="bGamesList" style="max-height:240px;overflow:auto;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:8px;"></div></div>
+                    <div class="action-btns"><button class="btn btn-primary" id="saveBundleBtn">Save Bundle</button><button class="btn btn-outline" id="cancelBundleBtn">Cancel</button></div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            const list = document.getElementById('bGamesList');
+            localGames.forEach(g => {
+                const chk = document.createElement('div');
+                chk.style.padding = '6px 0';
+                chk.innerHTML = `<label style=\"display:flex;align-items:center;gap:8px;\"><input type=\"checkbox\" value=\"${g.name.replace(/"/g,'')}\"> <span>${g.name}</span></label>`;
+                list.appendChild(chk);
+            });
+            document.getElementById('cancelBundleBtn').addEventListener('click', () => document.body.removeChild(overlay));
+            document.getElementById('saveBundleBtn').addEventListener('click', () => {
+                const name = document.getElementById('bName').value.trim();
+                if (!name) return alert('Bundle name required');
+                const desc = document.getElementById('bDesc').value.trim();
+                const selected = Array.from(list.querySelectorAll('input[type=checkbox]:checked')).map(i => i.value);
+                const bundle = { name, description: desc, gameIds: selected };
+                localBundles.push(bundle);
+                localStorage.setItem('nexplayy_bundles', JSON.stringify(localBundles));
+                renderBundlesAdmin();
+                document.body.removeChild(overlay);
+                alert('Bundle saved. Open homepage to view bundles.');
+            });
+        }
+
+        function editBundle(idx) {
+            const b = localBundles[idx];
+            if (!b) return;
+            // reuse modal
+            showAddBundleModal();
+            const overlay = document.getElementById('bundleModalOverlay');
+            overlay.querySelector('#bundleModalTitle').innerText = 'Edit Bundle';
+            overlay.querySelector('#bName').value = b.name;
+            overlay.querySelector('#bDesc').value = b.description || '';
+            const list = overlay.querySelector('#bGamesList');
+            list.querySelectorAll('input[type=checkbox]').forEach(cb => {
+                cb.checked = b.gameIds && b.gameIds.includes(cb.value);
+            });
+            const saveBtn = overlay.querySelector('#saveBundleBtn');
+            saveBtn.onclick = () => {
+                const name = overlay.querySelector('#bName').value.trim();
+                const desc = overlay.querySelector('#bDesc').value.trim();
+                const selected = Array.from(list.querySelectorAll('input[type=checkbox]:checked')).map(i => i.value);
+                localBundles[idx] = { name, description: desc, gameIds: selected };
+                localStorage.setItem('nexplayy_bundles', JSON.stringify(localBundles));
+                renderBundlesAdmin();
+                document.body.removeChild(overlay);
+            };
+        }
+
+        function deleteBundle(idx) {
+            if (!confirm('Delete this bundle?')) return;
+            localBundles.splice(idx,1);
+            localStorage.setItem('nexplayy_bundles', JSON.stringify(localBundles));
+            renderBundlesAdmin();
+        }
+
         function closeModal() {
             document.getElementById('gameModal').style.display = 'none';
         }
@@ -246,12 +580,16 @@
         function exportData() {
             const data = {
                 hero: heroData,
-                games: localGames
+                games: localGames,
+                ranges: localRanges,
+                bundles: localBundles,
+                featured: localFeatured,
+                settings: localSettings
             };
             const json = JSON.stringify(data, null, 2);
             // This copies it to clipboard and also shows it
             const textarea = document.createElement('textarea');
-            textarea.value = `// Copy this into your main.js to make changes permanent for everyone!\nconst gamesData = ${JSON.stringify(localGames, null, 2)};\nconst heroData = ${JSON.stringify(heroData, null, 2)};`;
+            textarea.value = `// Copy this into your main.js to make changes permanent for everyone!\nconst gamesData = ${JSON.stringify(localGames, null, 2)};\nconst heroData = ${JSON.stringify(heroData, null, 2)};\nconst ranges = ${JSON.stringify(localRanges, null, 2)};\nconst bundles = ${JSON.stringify(localBundles, null, 2)};\nconst featured = ${JSON.stringify(localFeatured, null, 2)};\nconst settings = ${JSON.stringify(localSettings, null, 2)};`;
             document.body.appendChild(textarea);
             textarea.select();
             document.execCommand('copy');
