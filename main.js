@@ -211,14 +211,6 @@ gameSearch.addEventListener('input', (e) => {
     renderGames(activeFilter, e.target.value);
 });
 
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderGames(btn.dataset.filter, gameSearch.value);
-    });
-});
-
 window.addEventListener('scroll', () => {
     if (window.scrollY > 50) navbar.classList.add('scrolled');
     else navbar.classList.remove('scrolled');
