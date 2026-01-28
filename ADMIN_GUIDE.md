@@ -6,7 +6,7 @@
 Navigate to: **`/admin.html`** or click the ⚙️ icon in the top-right corner of the website.
 
 ### Step 2: Login
-- **Default Password**: `admin123`
+- **Admin Password**: `NexPlayy@2026` (Change this in admin.html for additional security)
 - Enter the password and click "Login"
 
 ---
@@ -160,7 +160,7 @@ When you make changes in the admin panel:
   - Contact support to recover from backups
 
 **Problem**: Can't login to admin
-- **Solution**: Default password is `admin123`
+- **Solution**: Use your custom admin password
 - Check caps lock is off
 - Clear browser cookies and try again
 
@@ -183,7 +183,7 @@ When you make changes in the admin panel:
 
 | Feature | Default | Notes |
 |---------|---------|-------|
-| Admin Password | admin123 | Change in admin.html (line ~200) |
+| Admin Password | NexPlayy@2026 | Change in admin.html if needed |
 | Carousel Speed | 5000ms | Editable in Site Settings |
 | Max Games | Unlimited | No limit imposed |
 | Image Format | JPG, PNG, WEBP | No HEIC or SVG |
