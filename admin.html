@@ -337,7 +337,10 @@
                             <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 5px;">${b.desc}</p>
                             ${b.link ? `<p style="color: var(--secondary-color); font-size: 0.85rem;"><i class="fas fa-link"></i> ${b.link}</p>` : ''}
                         </div>
-                        <button class="btn btn-outline btn-small" onclick="deleteBanner(${idx})">Delete</button>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-primary btn-small" onclick="editBanner(${idx})">Edit</button>
+                            <button class="btn btn-outline btn-small" onclick="deleteBanner(${idx})">Delete</button>
+                        </div>
                     </div>
                 `;
                 list.appendChild(card);
@@ -350,6 +353,17 @@
             document.getElementById('bannerDesc').value = '';
             document.getElementById('bannerImage').value = '';
             document.getElementById('bannerLink').value = '';
+            document.getElementById('bannerModal').style.display = 'flex';
+        }
+
+        function editBanner(idx) {
+            const banners = JSON.parse(localStorage.getItem('nexplayy_banners')) || [];
+            const banner = banners[idx];
+            editingBannerId = idx;
+            document.getElementById('bannerTitle').value = banner.title;
+            document.getElementById('bannerDesc').value = banner.desc;
+            document.getElementById('bannerImage').value = banner.image || '';
+            document.getElementById('bannerLink').value = banner.link || '';
             document.getElementById('bannerModal').style.display = 'flex';
         }
 
@@ -366,7 +380,15 @@
             if (!title || !desc || !image) return alert('Fill in title, description, and image URL');
 
             let banners = JSON.parse(localStorage.getItem('nexplayy_banners')) || [];
-            banners.push({ title, desc, image, link });
+            if (editingBannerId !== null) {
+                // Update existing banner
+                banners[editingBannerId] = { title, desc, image, link };
+                alert('Banner updated!');
+            } else {
+                // Add new banner
+                banners.push({ title, desc, image, link });
+                alert('Banner added!');
+            }
             localStorage.setItem('nexplayy_banners', JSON.stringify(banners));
             closeBannerModal();
             loadBanners();
@@ -374,7 +396,6 @@
             if (window.renderBannersSection) {
                 renderBannersSection();
             }
-            alert('Banner added!');
         }
 
         function deleteBanner(idx) {
