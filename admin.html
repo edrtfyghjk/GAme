@@ -134,6 +134,10 @@
                 <textarea id="bannerDesc" placeholder="Banner description" style="min-height: 80px;"></textarea>
             </div>
             <div class="form-group">
+                <label>Banner Image URL</label>
+                <input type="text" id="bannerImage" placeholder="https://...">
+            </div>
+            <div class="form-group">
                 <label>Banner Link (optional)</label>
                 <input type="text" id="bannerLink" placeholder="https://...">
             </div>
@@ -324,9 +328,11 @@
             bannersData.forEach((b, idx) => {
                 const card = document.createElement('div');
                 card.style.cssText = 'background: rgba(0,245,255,0.05); border: 1px solid rgba(0,245,255,0.2); border-radius: 8px; padding: 15px; margin-bottom: 12px;';
+                const imageThumb = b.image ? `<img src="${b.image}" alt="${b.title}" style="max-width: 100px; height: 60px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">` : '';
                 card.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div>
+                        <div style="flex: 1;">
+                            ${imageThumb}
                             <h4 style="color: var(--primary-color); margin-bottom: 5px;">${b.title}</h4>
                             <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 5px;">${b.desc}</p>
                             ${b.link ? `<p style="color: var(--secondary-color); font-size: 0.85rem;"><i class="fas fa-link"></i> ${b.link}</p>` : ''}
@@ -342,6 +348,7 @@
             editingBannerId = null;
             document.getElementById('bannerTitle').value = '';
             document.getElementById('bannerDesc').value = '';
+            document.getElementById('bannerImage').value = '';
             document.getElementById('bannerLink').value = '';
             document.getElementById('bannerModal').style.display = 'flex';
         }
@@ -353,15 +360,20 @@
         function saveBanner() {
             const title = document.getElementById('bannerTitle').value.trim();
             const desc = document.getElementById('bannerDesc').value.trim();
+            const image = document.getElementById('bannerImage').value.trim();
             const link = document.getElementById('bannerLink').value.trim();
 
-            if (!title || !desc) return alert('Fill in title and description');
+            if (!title || !desc || !image) return alert('Fill in title, description, and image URL');
 
             let banners = JSON.parse(localStorage.getItem('nexplayy_banners')) || [];
-            banners.push({ title, desc, link });
+            banners.push({ title, desc, image, link });
             localStorage.setItem('nexplayy_banners', JSON.stringify(banners));
             closeBannerModal();
             loadBanners();
+            // Update the home page banners immediately
+            if (window.renderBannersSection) {
+                renderBannersSection();
+            }
             alert('Banner added!');
         }
 

@@ -349,6 +349,7 @@ h1, h2, h3, .logo {
     align-items: flex-end;
     background-size: cover !important;
     background-position: center !important;
+    background-repeat: no-repeat !important;
     position: relative;
     cursor: pointer;
     transition: var(--transition);

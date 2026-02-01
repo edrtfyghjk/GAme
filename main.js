@@ -106,7 +106,9 @@ function renderBannersSection() {
     bannersData.forEach(banner => {
         const bannerEl = document.createElement('div');
         bannerEl.className = 'banner-item';
+        const imageHtml = banner.image ? `<div class="banner-image" style="margin-bottom: 15px;"><img src="${fixDriveUrl(banner.image)}" alt="${banner.title}" style="max-width: 100%; height: auto; border-radius: 8px; max-height: 300px; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80'"></div>` : '';
         bannerEl.innerHTML = `
+            ${imageHtml}
             <h3>${banner.title}</h3>
             <p>${banner.desc}</p>
             ${banner.link ? `<a href="${banner.link}" target="_blank" class="btn btn-primary btn-small">Learn More</a>` : ''}
@@ -186,8 +188,13 @@ function renderFeaturedCarousel() {
 
     use.forEach((g, idx) => {
         const el = document.createElement('div');
-        el.className = 'feature-slide glass';
-        el.style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.2)), url('${fixDriveUrl(g.image)}')`;
+        el.className = 'feature-slide';
+        const fixedUrl = fixDriveUrl(g.image);
+        el.style.backgroundImage = `linear-gradient(135deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%), url('${fixedUrl}')`;
+        el.style.backgroundSize = 'cover';
+        el.style.backgroundPosition = 'center';
+        el.style.backgroundRepeat = 'no-repeat';
+        el.style.backgroundAttachment = 'scroll';
         const note = (featuredRaw[idx] && featuredRaw[idx].note) ? featuredRaw[idx].note : '';
         el.innerHTML = `<div class="feature-info"><h2>${g.name}</h2><p>${note || g.description || ''}</p><div class="feature-actions"><span class="price">₹${g.price}</span><a href="https://ig.me/m/nexplayy.store?text=I%20want%20to%20buy%20${encodeURIComponent(g.name)}" class="btn btn-primary">DM To Buy</a></div></div>`;
         el.addEventListener('click', () => showGameDetail(g));
