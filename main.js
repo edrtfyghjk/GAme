@@ -240,8 +240,8 @@ function showGameDetail(game) {
             <div class="detail-right">
                 <h2>${game.name}</h2>
                 <div class="detail-meta"><span class="game-platform">${game.platform}</span><span class="game-price">₹${game.price}</span>${game.oldPrice?`<span class="game-old-price">₹${game.oldPrice}</span>`:''}</div>
-                <p class="game-desc" style="-webkit-line-clamp:6;">${game.description||'Full access digital license. Verified original game. Order via DM.'}</p>
-                <div style="display:flex;gap:12px;margin-top:18px;"><a class="btn btn-primary" href="https://ig.me/m/nexplayy.store?text=I%20want%20to%20buy%20${encodeURIComponent(game.name)}" target="_blank">DM To Buy</a><button class="btn btn-outline" id="closeDetailBtn">Close</button></div>
+                <p class="game-desc">${game.description||'Full access digital license. Verified original game. Order via DM.'}</p>
+                <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;"><a class="btn btn-primary" href="https://ig.me/m/nexplayy.store?text=I%20want%20to%20buy%20${encodeURIComponent(game.name)}" target="_blank">DM To Buy</a><button class="btn btn-outline" id="closeDetailBtn">Close</button></div>
             </div>
         </div>
     `;
