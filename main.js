@@ -230,6 +230,31 @@ function renderFeaturedCarousel() {
     }
 }
 
+// Function to populate the featured carousel
+function populateFeaturedCarousel(games) {
+    const carousel = document.querySelector('.featured-carousel');
+    if (!carousel) return;
+
+    games.forEach(game => {
+        const gameCard = document.createElement('div');
+        gameCard.innerHTML = `
+            <img src="${game.image}" alt="${game.name}" />
+            <h3>${game.name}</h3>
+            <p>${game.description}</p>
+        `;
+        carousel.appendChild(gameCard);
+    });
+}
+
+// Example usage
+const featuredGames = [
+    { image: 'assets/game1.jpg', name: 'Game One', description: 'An exciting adventure game.' },
+    { image: 'assets/game2.jpg', name: 'Game Two', description: 'A thrilling action game.' },
+    { image: 'assets/game3.jpg', name: 'Game Three', description: 'A captivating puzzle game.' }
+];
+
+populateFeaturedCarousel(featuredGames);
+
 // Game Detail Modal
 function showGameDetail(game) {
     const overlay = document.createElement('div');
