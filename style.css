@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@400;700;900&display=swap');
 
 :root {
-    --primary-color: #00f5ff;
-    --secondary-color: #00a2ff;
-    --accent-color: #ff006e;
-    --success-color: #00ff41;
-    --bg-dark: #0a0e27;
-    --bg-darker: #050a1a;
-    --card-bg: rgba(10, 14, 39, 0.8);
+    --primary-color: #9d4edd;
+    --secondary-color: #c77dff;
+    --accent-color: #e0aaff;
+    --success-color: #a368d9;
+    --bg-dark: #10002b;
+    --bg-darker: #08001b;
+    --card-bg: rgba(16, 0, 43, 0.8);
     --text-main: #ffffff;
-    --text-dim: #a0aec0;
+    --text-dim: #c8b6ff;
     --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
     --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
@@ -26,7 +26,7 @@ html {
 
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, var(--bg-darker) 0%, #0f1a3a 100%);
+    background: linear-gradient(135deg, var(--bg-darker) 0%, #1a0033 100%);
     color: var(--text-main);
     line-height: 1.6;
     overflow-x: hidden;
@@ -40,10 +40,10 @@ h1, h2, h3, .logo {
 
 /* Glass Morphism */
 .glass {
-    background: rgba(15, 20, 50, 0.7);
+    background: rgba(16, 0, 43, 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 245, 255, 0.1);
+    border: 1px solid rgba(157, 78, 221, 0.2);
     border-radius: 12px;
 }
 
@@ -54,15 +54,15 @@ h1, h2, h3, .logo {
     left: 0;
     right: 0;
     z-index: 1000;
-    background: rgba(10, 14, 39, 0.95);
+    background: rgba(16, 0, 43, 0.95);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 245, 255, 0.1);
+    border-bottom: 1px solid rgba(157, 78, 221, 0.2);
     padding: 15px 0;
     transition: var(--transition);
 }
 
 .nav-bar.scrolled {
-    background: rgba(5, 10, 26, 0.98);
+    background: rgba(8, 0, 27, 0.98);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 

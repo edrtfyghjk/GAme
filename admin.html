@@ -219,8 +219,16 @@
                 <input type="text" id="gamePlatform" placeholder="e.g. PC / PS5 / Xbox">
             </div>
             <div class="form-group">
-                <label>Image URL</label>
-                <input type="text" id="gameImage" placeholder="https://...">
+                <label>Game Image</label>
+                <div style="border: 2px dashed rgba(157, 78, 221, 0.4); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" id="imageDropZone">
+                    <p style="color: var(--text-dim); margin-bottom: 10px;">Paste image or click to upload</p>
+                    <input type="file" id="gameImageUpload" accept="image/*" style="display: none;">
+                    <small style="color: var(--text-dim);">Or paste an image from clipboard</small>
+                </div>
+                <div id="imagePreviewContainer" style="margin-top: 15px; text-align: center;">
+                    <img id="imagePreview" style="display: none; max-width: 100%; max-height: 200px; border-radius: 8px;">
+                </div>
+                <input type="text" id="gameImage" placeholder="https://... (or paste image above)" style="margin-top: 10px;">
             </div>
             <div class="form-group">
                 <label>Badge (optional)</label>
@@ -550,7 +558,7 @@
 
             gamesData.forEach((g, idx) => {
                 const card = document.createElement('div');
-                card.style.cssText = 'background: rgba(0,162,255,0.05); border: 1px solid rgba(0,162,255,0.2); border-radius: 8px; padding: 12px; margin-bottom: 10px;';
+                card.style.cssText = 'background: rgba(157,78,221,0.05); border: 1px solid rgba(157,78,221,0.2); border-radius: 8px; padding: 12px; margin-bottom: 10px;';
                 card.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div style="flex: 1;">
@@ -558,7 +566,10 @@
                             <p style="color: var(--text-dim); font-size: 0.85rem; margin: 2px 0;">₹${g.price} | ${g.platform}</p>
                             ${g.badge ? `<span style="color: var(--accent-color); font-size: 0.75rem;">${g.badge}</span>` : ''}
                         </div>
-                        <button class="btn btn-outline btn-small" onclick="deleteGame(${idx})">Delete</button>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-primary btn-small" onclick="editGame(${idx})">Edit</button>
+                            <button class="btn btn-outline btn-small" onclick="deleteGame(${idx})">Delete</button>
+                        </div>
                     </div>
                 `;
                 list.appendChild(card);
@@ -578,8 +589,97 @@
             document.getElementById('gameModal').style.display = 'flex';
         }
 
+        function editGame(idx) {
+            const gamesData = JSON.parse(localStorage.getItem('nexplayy_games')) || [];
+            const game = gamesData[idx];
+            editingGameIdx = idx;
+            loadGameFormRanges();
+            document.getElementById('gameName').value = game.name;
+            document.getElementById('gamePrice').value = game.price;
+            document.getElementById('gameOldPrice').value = game.oldPrice || '';
+            document.getElementById('gamePlatform').value = game.platform;
+            document.getElementById('gameImage').value = game.image;
+            document.getElementById('gameBadge').value = game.badge || '';
+            document.getElementById('gameDesc').value = game.description || '';
+            document.getElementById('gameRange').value = game.range;
+            // Update modal title for clarity
+            const modalHeader = document.querySelector('#gameModal .modal-header h2');
+            if (modalHeader) modalHeader.textContent = 'Edit Game';
+            document.getElementById('gameModal').style.display = 'flex';
+        }
+
         function closeGameModal() {
             document.getElementById('gameModal').style.display = 'none';
+            // Reset modal header
+            const modalHeader = document.querySelector('#gameModal .modal-header h2');
+            if (modalHeader) modalHeader.textContent = 'Add/Edit Game';
+            // Clear image preview
+            const preview = document.getElementById('imagePreview');
+            if (preview) {
+                preview.style.display = 'none';
+                preview.src = '';
+            }
+        }
+
+        // Image paste and upload functionality
+        function setupImageUpload() {
+            const dropZone = document.getElementById('imageDropZone');
+            const fileInput = document.getElementById('gameImageUpload');
+            const preview = document.getElementById('imagePreview');
+            const imageUrlInput = document.getElementById('gameImage');
+
+            if (!dropZone) return;
+
+            // Click to upload
+            dropZone.addEventListener('click', () => fileInput.click());
+
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) handleImageFile(file, preview, imageUrlInput);
+            });
+
+            // Drag and drop
+            dropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'rgba(157, 78, 221, 0.8)';
+                dropZone.style.background = 'rgba(157, 78, 221, 0.05)';
+            });
+
+            dropZone.addEventListener('dragleave', () => {
+                dropZone.style.borderColor = 'rgba(157, 78, 221, 0.4)';
+                dropZone.style.background = 'transparent';
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.style.borderColor = 'rgba(157, 78, 221, 0.4)';
+                dropZone.style.background = 'transparent';
+                const files = e.dataTransfer.files;
+                if (files.length > 0) handleImageFile(files[0], preview, imageUrlInput);
+            });
+
+            // Paste from clipboard
+            document.addEventListener('paste', (e) => {
+                const items = e.clipboardData.items;
+                for (let item of items) {
+                    if (item.type.indexOf('image') !== -1) {
+                        const file = item.getAsFile();
+                        handleImageFile(file, preview, imageUrlInput);
+                    }
+                }
+            });
+        }
+
+        function handleImageFile(file, preview, input) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64 = e.target.result;
+                preview.src = base64;
+                preview.style.display = 'block';
+                input.value = base64;
+            };
+            reader.readAsDataURL(file);
         }
 
         function loadGameFormRanges() {
@@ -613,13 +713,14 @@
             let gamesData = JSON.parse(localStorage.getItem('nexplayy_games')) || [];
             if (editingGameIdx !== null) {
                 gamesData[editingGameIdx] = game;
+                alert('Game updated!');
             } else {
                 gamesData.push(game);
+                alert('Game saved!');
             }
             localStorage.setItem('nexplayy_games', JSON.stringify(gamesData));
             closeGameModal();
             loadGames();
-            alert('Game saved!');
         }
 
         function deleteGame(idx) {
@@ -649,6 +750,7 @@
         // Load dashboard on startup
         window.addEventListener('DOMContentLoaded', () => {
             const password = localStorage.getItem('nexplayy_admin_logged_in');
+            setupImageUpload();
             if (password === 'true') {
                 document.getElementById('loginGate').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
