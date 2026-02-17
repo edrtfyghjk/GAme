@@ -495,7 +495,7 @@ h1, h2, h3, .logo {
     position: relative;
     overflow: hidden;
     height: 200px;
-    background: linear-gradient(135deg, rgba(0, 245, 255, 0.1), rgba(0, 162, 255, 0.05));
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), rgba(199, 125, 255, 0.05));
 }
 
 .game-img-container img,
@@ -503,6 +503,8 @@ h1, h2, h3, .logo {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    display: block;
 }
 
 .offer-badge {

@@ -23,12 +23,26 @@ function isVideoUrl(url) {
     } catch (e) { return false; }
 }
 
+function isValidImageUrl(url) {
+    if (!url) return false;
+    const imageExt = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.tiff'];
+    try {
+        const lower = url.split('?')[0].toLowerCase();
+        return imageExt.some(ext => lower.endsWith(ext)) || url.startsWith('data:image');
+    } catch (e) { return false; }
+}
+
 function mediaHtmlFor(url, cls = 'game-img') {
     const u = fixDriveUrl(url);
     if (isVideoUrl(u)) {
         return `<video class="${cls}" controls playsinline preload="metadata"><source src="${u}"></video>`;
     }
-    return `<img src="${u}" class="${cls}" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80'">`;
+    // Handle all image formats with proper fallback
+    if (isValidImageUrl(u) || u.startsWith('data:image')) {
+        return `<img src="${u}" class="${cls}" alt="Game Image" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80'" loading="lazy">`;
+    }
+    // Default fallback if URL is unclear
+    return `<img src="${u}" class="${cls}" alt="Game Image" onerror="this.src='https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80'" loading="lazy">`;
 }
 
 // Master Data - Checks localStorage first for Admin Changes

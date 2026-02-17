@@ -66,7 +66,7 @@
         <div class="admin-card">
             <h3><i class="fas fa-list"></i> Price Ranges</h3>
             <div style="display: flex; gap: 12px; align-items: center; margin-top: 15px;">
-                <input type="text" id="newRangeValue" placeholder="e.g. 249" style="flex: 1; max-width: 200px; padding: 10px 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,245,255,0.2); border-radius: 6px; color: #fff;">
+                <input type="text" id="newRangeValue" placeholder="e.g. 249" style="flex: 1; max-width: 200px; padding: 10px 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(157,78,221,0.2); border-radius: 6px; color: #fff;">
                 <button class="btn btn-primary btn-small" onclick="addRange()">Add Range</button>
             </div>
             <div id="rangesList" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;"></div>
@@ -183,7 +183,7 @@
             </div>
             <div class="form-group">
                 <label>Select Games</label>
-                <div id="bundleGamesList" style="max-height: 300px; overflow-y: auto; border: 1px solid rgba(0,245,255,0.2); border-radius: 6px; padding: 10px;"></div>
+                <div id="bundleGamesList" style="max-height: 300px; overflow-y: auto; border: 1px solid rgba(157,78,221,0.2); border-radius: 6px; padding: 10px;"></div>
             </div>
             <button class="btn btn-primary" onclick="saveBundle()" style="width: 100%; margin-top: 15px;">Create Bundle</button>
         </div>
@@ -222,8 +222,8 @@
                 <label>Game Image</label>
                 <div style="border: 2px dashed rgba(157, 78, 221, 0.4); border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s;" id="imageDropZone">
                     <p style="color: var(--text-dim); margin-bottom: 10px;">Paste image or click to upload</p>
-                    <input type="file" id="gameImageUpload" accept="image/*" style="display: none;">
-                    <small style="color: var(--text-dim);">Or paste an image from clipboard</small>
+                    <input type="file" id="gameImageUpload" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/svg+xml,image/bmp" style="display: none;">
+                    <small style="color: var(--text-dim);">JPG, JPEG, PNG, GIF, WebP, SVG supported. Or paste from clipboard</small>
                 </div>
                 <div id="imagePreviewContainer" style="margin-top: 15px; text-align: center;">
                     <img id="imagePreview" style="display: none; max-width: 100%; max-height: 200px; border-radius: 8px;">
@@ -335,7 +335,7 @@
 
             bannersData.forEach((b, idx) => {
                 const card = document.createElement('div');
-                card.style.cssText = 'background: rgba(0,245,255,0.05); border: 1px solid rgba(0,245,255,0.2); border-radius: 8px; padding: 15px; margin-bottom: 12px;';
+                card.style.cssText = 'background: rgba(157,78,221,0.05); border: 1px solid rgba(157,78,221,0.2); border-radius: 8px; padding: 15px; margin-bottom: 12px;';
                 const imageThumb = b.image ? `<img src="${b.image}" alt="${b.title}" style="max-width: 100px; height: 60px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">` : '';
                 card.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: start;">
@@ -488,7 +488,7 @@
 
             bundlesData.forEach((b, idx) => {
                 const card = document.createElement('div');
-                card.style.cssText = 'background: rgba(0,255,65,0.05); border: 1px solid rgba(0,255,65,0.2); border-radius: 8px; padding: 15px; margin-bottom: 12px;';
+                card.style.cssText = 'background: rgba(199,125,255,0.05); border: 1px solid rgba(199,125,255,0.2); border-radius: 8px; padding: 15px; margin-bottom: 12px;';
                 card.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: start;">
                         <div>
@@ -708,6 +708,11 @@
                 return alert('Fill in all required fields');
             }
 
+            // Validate image (check if it's a valid image format)
+            if (!isValidImage(image)) {
+                return alert('Please use a valid image (JPG, JPEG, PNG, GIF, WebP, etc.)');
+            }
+
             const game = { name, price, oldPrice: oldPrice || undefined, range, platform, image, badge: badge || undefined, description: desc || undefined };
 
             let gamesData = JSON.parse(localStorage.getItem('nexplayy_games')) || [];
@@ -719,8 +724,32 @@
                 alert('Game saved!');
             }
             localStorage.setItem('nexplayy_games', JSON.stringify(gamesData));
+            
+            // Trigger update across all pages/tabs
+            window.dispatchEvent(new StorageEvent('storage', {
+                key: 'nexplayy_games',
+                newValue: JSON.stringify(gamesData),
+                oldValue: JSON.stringify(gamesData),
+                storageArea: localStorage
+            }));
+            
             closeGameModal();
             loadGames();
+        }
+
+        // Validate image format and content
+        function isValidImage(imageInput) {
+            if (!imageInput) return false;
+            
+            // Support data URLs (base64 images)
+            if (imageInput.startsWith('data:')) {
+                return /^data:image\/(jpeg|jpg|png|gif|webp|svg\+xml)/.test(imageInput);
+            }
+            
+            // Support image URLs
+            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.tiff'];
+            const lowerUrl = imageInput.toLowerCase();
+            return imageExtensions.some(ext => lowerUrl.includes(ext));
         }
 
         function deleteGame(idx) {
