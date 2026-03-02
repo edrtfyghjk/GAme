@@ -4,8 +4,5 @@
   "cleanUrls": true,
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
-  ],
-  "static": {
-    "includeFiles": ["assets/**"]
-  }
+  ]
 }
